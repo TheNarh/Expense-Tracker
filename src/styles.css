@@ -1,4 +1,4 @@
-/* ==== Reset & Base ==== */
+
 * {
   margin: 0;
   padding: 0;
@@ -13,7 +13,7 @@ body {
   padding: 1rem;
 }
 
-/* ==== Header & Nav ==== */
+/* Header & Nav */
 header {
   display: flex;
   justify-content: space-between;
@@ -26,7 +26,7 @@ header h1 {
   color: #1a1a1a;
 }
 
-/* ==== Logo Area ==== */
+/* Logo Area */
 header .logo {
   display: flex;
   align-items: center;
@@ -34,11 +34,10 @@ header .logo {
 }
 
 header .logo img {
-  width: 40px;   /* Adjust size if needed */
+  width: 40px;
   height: 40px;
-  border-radius: 8px; /* keeps it neat */
+  border-radius: 8px;
 }
-
 
 nav ul {
   list-style: none;
@@ -57,16 +56,22 @@ nav a:hover {
   color: #007bff;
 }
 
-/* ==== Cards ==== */
+/* Cards */
 .card {
   background: #fff;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* ==== Balance ==== */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+}
+
+/* Balance */
 .balance {
   text-align: center;
 }
@@ -82,7 +87,7 @@ nav a:hover {
   color: #007bff;
 }
 
-/* ==== Summary ==== */
+/* Summary */
 .summary {
   display: flex;
   justify-content: space-between;
@@ -105,7 +110,12 @@ nav a:hover {
   font-size: 1.2rem;
 }
 
-/* ==== Transactions ==== */
+#balance {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Transactions */
 .transactions ul {
   list-style: none;
 }
@@ -115,21 +125,26 @@ nav a:hover {
   justify-content: space-between;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #eee;
+  transition: background 0.2s ease;
+  cursor: pointer;
 }
 
-.transactions li span.amount {
-  font-weight: bold;
+.transactions li:hover {
+  background: #f1f5ff; /* soft blue highlight */
 }
 
-.transactions li.income span.amount {
+/* Specific income/expense item styles */
+.income-item {
   color: #28a745;
+  font-weight: 500;
 }
 
-.transactions li.expense span.amount {
+.expense-item {
   color: #dc3545;
+  font-weight: 500;
 }
 
-/* ==== Add Transaction ==== */
+/* Add Transaction */
 .add-transaction form {
   display: flex;
   flex-wrap: wrap;
@@ -145,19 +160,50 @@ nav a:hover {
   font-size: 1rem;
 }
 
+.add-transaction input:focus,
+.add-transaction select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.2);
+}
+
 .add-transaction button {
   background: #007bff;
   color: #fff;
   border: none;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .add-transaction button:hover {
   background: #0056b3;
+  transform: translateY(-2px);
 }
 
-/* ==== Footer ==== */
+/* Transaction Lists */
+#income-list li,
+#expense-list li {
+  display: flex;
+  justify-content: space-between; /* text and delete button */
+  align-items: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Delete button */
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  color: red;
+}
+
+/* Footer */
 footer {
   text-align: center;
   font-size: 0.85rem;
