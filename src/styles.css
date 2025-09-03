@@ -133,6 +133,48 @@ nav a:hover {
   background: #f1f5ff; /* soft blue highlight */
 }
 
+/* ==========================
+   Category Dropdown Section
+========================== */
+.transactions label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #444;
+}
+
+.transactions #category {
+  width: 100%;
+  max-width: 250px;
+  padding: 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  margin-bottom: 1rem;
+}
+
+.transactions #category:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.2);
+}
+
+/* Keep transaction lists aligned */
+.transaction-lists {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.transaction-lists > div {
+  flex: 1;
+  min-width: 250px;
+}
+
+
 /* Specific income/expense item styles */
 .income-item {
   color: #28a745;
