@@ -1,4 +1,4 @@
-// we put all elements to be selected in an object to make it easier to access them
+// ✅ Centralized UI references
 const ui = {
   balance: document.getElementById("balance"),
   income: document.getElementById("income"),
@@ -9,116 +9,141 @@ const ui = {
   description: document.getElementById("description"),
   amount: document.getElementById("amount"),
   type: document.getElementById("type"),
-  submitBtn: document.querySelector("#transaction-form button[type='submit']") 
+  category: document.getElementById("category"),
+  submitBtn: document.querySelector("#transaction-form button[type='submit']"),
 };
 
-// store transactions
-let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
-let editId = null; // 
-let cancelBtn = null; // 
-let originalTx = null; //
+// ✅ Category colors
+const categoryColors = {
+  Food: "orange",
+  Transport: "blue",
+  Rent: "gray",
+  Shopping: "purple",
+  Salary: "green",
+  Other: "black",
+};
 
-// update UI
-function updateUI() {
+// ✅ State
+let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+let editId = null;
+let cancelBtn = null;
+let originalTx = null;
+
+// ✅ Render a single transaction
+function renderTransaction(tx) {
+  const li = document.createElement("li");
+  li.classList.add(tx.type === "income" ? "income-item" : "expense-item");
+
+  // transaction text
+  const text = document.createElement("span");
+  text.innerHTML = `
+    ${tx.description} 
+    <span style="color:${categoryColors[tx.category] || "black"}; font-weight:600;">
+      [${tx.category}]
+    </span>
+    - ${tx.date}
+    : ${tx.type === "income" ? "+" : "-"}$${tx.amount.toFixed(2)}
+  `;
+
+  // edit button
+  const editBtn = document.createElement("button");
+  editBtn.textContent = "✏️";
+  editBtn.classList.add("edit-btn");
+  editBtn.addEventListener("click", () => editTransaction(tx.id));
+
+  // delete button
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "❌";
+  deleteBtn.classList.add("delete-btn");
+  deleteBtn.addEventListener("click", () => deleteTransaction(tx.id));
+
+  li.appendChild(text);
+  li.appendChild(editBtn);
+  li.appendChild(deleteBtn);
+
+  return li;
+}
+
+// ✅ Update UI
+function updateUI(searchQuery = "", filterCategory = "All") {
   let incomeTotal = 0;
   let expenseTotal = 0;
 
-  // Clear old list items
-  ui.incomeList.innerHTML = '';
-  ui.expenseList.innerHTML = '';
+  ui.incomeList.innerHTML = "";
+  ui.expenseList.innerHTML = "";
 
-  // Loop through transactions
-  transactions.forEach(tx => {
-    const li = document.createElement('li');
-    li.classList.add(tx.type === 'income' ? "income-item" : "expense-item");
+  transactions
+    .filter((tx) => {
+      // search filter
+      const matchesSearch = tx.description
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      // category filter
+      const matchesCategory =
+        filterCategory === "All" || tx.category === filterCategory;
+      return matchesSearch && matchesCategory;
+    })
+    .forEach((tx) => {
+      const li = renderTransaction(tx);
 
-    // Transaction text
-    const text = document.createElement('span');
-    text.textContent = `${tx.description}: ${tx.type === 'income' ? '+' : '-'}$${tx.amount.toFixed(2)}`;
-
-    // Edit button 🔹
-    const editBtn = document.createElement('button');
-    editBtn.textContent = "✏️";
-    editBtn.classList.add("edit-btn");
-    editBtn.addEventListener("click", () => {
-      editTransaction(tx.id);
+      if (tx.type === "income") {
+        incomeTotal += tx.amount;
+        ui.incomeList.appendChild(li);
+      } else {
+        expenseTotal += tx.amount;
+        ui.expenseList.appendChild(li);
+      }
     });
 
-    // Delete button
-    const deleteBtn = document.createElement('button');
-    deleteBtn.textContent = "❌";
-    deleteBtn.classList.add("delete-btn");
-    deleteBtn.addEventListener("click", () => {
-      deleteTransaction(tx.id);
-    });
-
-    // Append elements
-    li.appendChild(text);
-    li.appendChild(editBtn);  
-    li.appendChild(deleteBtn);
-
-    if (tx.type === 'income') {
-      incomeTotal += tx.amount;
-      ui.incomeList.appendChild(li);
-    } else {
-      expenseTotal += tx.amount;
-      ui.expenseList.appendChild(li);
-    }
-  });
-
-  // Update totals
+  // update totals
   const balance = incomeTotal - expenseTotal;
   ui.income.textContent = `$${incomeTotal.toFixed(2)}`;
   ui.expenses.textContent = `$${expenseTotal.toFixed(2)}`;
   ui.balance.textContent = `$${balance.toFixed(2)}`;
 
-  // Save to localStorage
+  // save state
   localStorage.setItem("transactions", JSON.stringify(transactions));
 }
 
-// Delete transaction
+// ✅ Delete transaction
 function deleteTransaction(id) {
-  transactions = transactions.filter(tx => tx.id !== id);
+  transactions = transactions.filter((tx) => tx.id !== id);
   updateUI();
 }
 
-// Edit transaction 🔹
+// ✅ Edit transaction
 function editTransaction(id) {
-  const tx = transactions.find(t => t.id === id);
+  const tx = transactions.find((t) => t.id === id);
   if (!tx) return;
 
-  // Pre-fill form with transaction data
   ui.description.value = tx.description;
   ui.amount.value = tx.amount;
   ui.type.value = tx.type;
+  ui.category.value = tx.category;
 
-  // Store original for comparison 
   originalTx = { ...tx };
-
-  // Set edit mode
   editId = id;
   ui.submitBtn.textContent = "Update Transaction";
-  ui.submitBtn.disabled = true; 
+  ui.submitBtn.disabled = true;
 
-  // Add cancel button if not already there
   if (!cancelBtn) {
     cancelBtn = document.createElement("button");
-    cancelBtn.type = "button"; 
+    cancelBtn.type = "button";
     cancelBtn.textContent = "Cancel";
     cancelBtn.classList.add("cancel-btn");
     cancelBtn.addEventListener("click", cancelEdit);
     ui.form.appendChild(cancelBtn);
   }
 
-  // Watch inputs for changes
-  ["input", "change"].forEach(evt => {
+  ["input", "change"].forEach((evt) => {
     ui.description.addEventListener(evt, checkFormChanges);
     ui.amount.addEventListener(evt, checkFormChanges);
     ui.type.addEventListener(evt, checkFormChanges);
+    ui.category.addEventListener(evt, checkFormChanges);
   });
 }
 
-// Cancel editing
+// ✅ Cancel edit mode
 function cancelEdit() {
   editId = null;
   originalTx = null;
@@ -127,71 +152,69 @@ function cancelEdit() {
   ui.submitBtn.disabled = false;
 
   if (cancelBtn) {
-    cancelBtn.remove(); // remove button from DOM
+    cancelBtn.remove();
     cancelBtn = null;
   }
 }
 
-// Check if form values differ from original
+// ✅ Check if form has changed
 function checkFormChanges() {
   if (!originalTx) return;
 
   const hasChanged =
     ui.description.value.trim() !== originalTx.description ||
     Number(ui.amount.value) !== originalTx.amount ||
-    ui.type.value !== originalTx.type;
+    ui.type.value !== originalTx.type ||
+    ui.category.value !== originalTx.category;
 
   ui.submitBtn.disabled = !hasChanged;
 }
 
-// form submission handler
-ui.form.addEventListener('submit', function(e) {
+// ✅ Form submission
+ui.form.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  // Get form values
   const description = ui.description.value.trim();
   const amount = Number(ui.amount.value);
   const type = ui.type.value;
+  const category = ui.category.value;
 
-  // Validation
   if (!description || isNaN(amount) || amount <= 0) {
     alert("Please enter a valid description and amount.");
     return;
   }
 
   if (editId) {
-    // Update existing transaction
-    transactions = transactions.map(tx =>
-      tx.id === editId ? { ...tx, description, amount, type } : tx
+    // update
+    transactions = transactions.map((tx) =>
+      tx.id === editId
+        ? { ...tx, description, amount, type, category }
+        : tx
     );
-
-    // Reset edit mode
     editId = null;
     originalTx = null;
     ui.submitBtn.textContent = "Add Transaction";
     ui.submitBtn.disabled = false;
-
     if (cancelBtn) {
       cancelBtn.remove();
       cancelBtn = null;
     }
   } else {
-    // Create new transaction
+    // create new
     const transaction = {
       id: Date.now(),
       description,
       amount,
       type,
+      category,
+      date: new Date().toISOString().split("T")[0],
     };
     transactions.push(transaction);
   }
 
-  // Reset form
   ui.form.reset();
-
-  // Update UI
   updateUI();
 });
 
-// Load transactions on page load
+// ✅ Load initial state
 updateUI();

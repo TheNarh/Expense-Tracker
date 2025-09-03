@@ -1,4 +1,4 @@
-
+/* ========== Base Reset ========== */
 * {
   margin: 0;
   padding: 0;
@@ -11,14 +11,21 @@ body {
   color: #333;
   line-height: 1.5;
   padding: 1rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Header & Nav */
+/* ========== Header & Nav ========== */
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  background: #fff;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 header h1 {
@@ -26,7 +33,6 @@ header h1 {
   color: #1a1a1a;
 }
 
-/* Logo Area */
 header .logo {
   display: flex;
   align-items: center;
@@ -56,11 +62,20 @@ nav a:hover {
   color: #007bff;
 }
 
-/* Cards */
+/* ========== Layout ========== */
+main {
+  flex: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* ========== Cards ========== */
 .card {
   background: #fff;
   padding: 1.5rem;
-  margin-bottom: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -71,7 +86,7 @@ nav a:hover {
   box-shadow: 0 6px 14px rgba(0,0,0,0.08);
 }
 
-/* Balance */
+/* ========== Balance ========== */
 .balance {
   text-align: center;
 }
@@ -87,11 +102,12 @@ nav a:hover {
   color: #007bff;
 }
 
-/* Summary */
+/* ========== Summary ========== */
 .summary {
   display: flex;
   justify-content: space-between;
   text-align: center;
+  gap: 2rem;
 }
 
 .summary div {
@@ -99,13 +115,13 @@ nav a:hover {
 }
 
 #income {
-  color: #28a745; /* Green */
+  color: #28a745;
   font-weight: bold;
   font-size: 1.2rem;
 }
 
 #expenses {
-  color: #dc3545; /* Red */
+  color: #dc3545;
   font-weight: bold;
   font-size: 1.2rem;
 }
@@ -115,7 +131,45 @@ nav a:hover {
   font-weight: bold;
 }
 
-/* Transactions */
+/* ========== Transactions ========== */
+.transactions h2 {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.transactions label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.transactions select {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.transactions select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.2);
+}
+
+.transaction-lists {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.transaction-lists div {
+  flex: 1;
+}
+
 .transactions ul {
   list-style: none;
 }
@@ -130,10 +184,10 @@ nav a:hover {
 }
 
 .transactions li:hover {
-  background: #f1f5ff; /* soft blue highlight */
+  background: #f1f5ff;
 }
 
-/* Specific income/expense item styles */
+/* Income/Expense Item Colors */
 .income-item {
   color: #28a745;
   font-weight: 500;
@@ -144,7 +198,12 @@ nav a:hover {
   font-weight: 500;
 }
 
-/* Add Transaction */
+/* ========== Add Transaction ========== */
+.add-transaction h2 {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
 .add-transaction form {
   display: flex;
   flex-wrap: wrap;
@@ -158,6 +217,8 @@ nav a:hover {
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
+  flex: 1 1 calc(50% - 1rem);
+  min-width: 150px;
 }
 
 .add-transaction input:focus,
@@ -172,6 +233,7 @@ nav a:hover {
   color: #fff;
   border: none;
   cursor: pointer;
+  flex: 1 1 100%;
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
@@ -180,33 +242,59 @@ nav a:hover {
   transform: translateY(-2px);
 }
 
-/* Transaction Lists */
+/* Transaction Lists Styling */
 #income-list li,
 #expense-list li {
   display: flex;
-  justify-content: space-between; /* text and delete button */
+  justify-content: space-between;
   align-items: center;
   padding: 0.5rem;
   border-bottom: 1px solid #ddd;
 }
 
-/* Delete button */
 .delete-btn {
   background: transparent;
   border: none;
   color: #888;
   font-size: 1rem;
   cursor: pointer;
+  transition: color 0.2s ease;
 }
 
 .delete-btn:hover {
   color: red;
 }
 
-/* Footer */
+/* ========== Footer ========== */
 footer {
   text-align: center;
   font-size: 0.85rem;
   color: #777;
   margin-top: 2rem;
+  padding: 1rem 0;
+  border-top: 1px solid #eee;
+  background: #fff;
+  border-radius: 12px;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .summary {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .transaction-lists {
+    flex-direction: column;
+  }
+
+  .add-transaction form {
+    flex-direction: column;
+  }
+
+  .add-transaction input,
+  .add-transaction select,
+  .add-transaction button {
+    flex: 1 1 100%;
+  }
 }
