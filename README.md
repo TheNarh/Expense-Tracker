@@ -14,3 +14,5 @@ Delete a Transaction – Select and remove an entry from the list, which updates
 View Summary – See a visual summary of income and expenses, with optional filters by category or date.
 
 This application continuously keeps the displayed balance, total income, and total expenses in sync with stored data, ensuring accurate financial tracking.
+
+<img width="625" height="897" alt="Expense Tracker FlowChart" src="https://github.com/user-attachments/assets/7eaebe4e-2847-4080-a666-4220298b0e6e" />
